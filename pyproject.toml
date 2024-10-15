@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "salesforce"
+version = "0.1.0"
+description = "XSOAR 8 project to get EMEA team ticket details"
+authors = ["Daniel Berliant <dberliant@paloaltonetworks.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+demisto-sdk = "^1.32.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
