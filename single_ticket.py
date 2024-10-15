@@ -36,7 +36,10 @@ class salesforce_ticket(): # Define Salesforce ticket class with the attributes 
     def set_ticket_number(self, ticket_number: int):
         return self._ticket_number == ticket_number
 
-    def get_ticket_acv(self,ticket_creation_date):
+    def set_ticket_status(self, ticket_status: int):
+        return self._ticket_status == ticket_status
+
+    def get_ticket_acv(self,ticket_creation_date,ticket_status):
         acv_query = f"SELECT Case.CaseNumber, NewValue, CreatedDate FROM CaseHistory WHERE Case.CaseNumber = '{self._ticket_number}'"
         acv_query_response = demisto.executeCommand("salesforce-query", {"query": acv_query, "using": "SalesforcePy_XSOAR"})
 
@@ -48,6 +51,7 @@ class salesforce_ticket(): # Define Salesforce ticket class with the attributes 
                 created_dates = []
 
                 if isinstance(contents, list):
+                     table_data: list = []
                      for record in contents:
                           self._acv = record.get('NewValue')
                           self._acv_created_date = record.get('CreatedDate')
@@ -60,9 +64,18 @@ class salesforce_ticket(): # Define Salesforce ticket class with the attributes 
                 self._acv_created_date = ', '.join(created_dates) if created_dates else 'None'
                 self._duplicate_count = awaiting_customer_verification_count if awaiting_customer_verification_count > 1 else 'None'
                 self._ticket_created_date = ticket_creation_date if self._acv == 'False' else 'None'
+
+                table_data.append({
+                    'Case Number': self._ticket_number,
+                    'ACV': self._acv,
+                    'ACV Created Date/s': self._acv_created_date,
+                    'Duplicate Count': self._duplicate_count,
+                    'Ticket Creation Date': self._ticket_created_date,
+                    'Status': self._ticket_status
+                })
             else:
                 return_error(f"No acv status has been returned for ticket: {self._ticket_number}")
-
+     
 
 def main():
     # Step 1: Get the full name from the arguments
@@ -77,19 +90,17 @@ def main():
     ticket_list_content = salesforce_ticket_instance.get_owner_ticket_list(owner_id)
 
     # Get ACV status per ticket
-    table_data: list = []
     for item in ticket_list_content:
         ticket_number = item.get("CaseNumber")
         ticket_creation_date = item.get("CreatedDate")
+        ticket_status = item.get("Status")
         if ticket_number:
-            salesforce_ticket_instance.set_ticket_number(ticket_number)
+            salesforce_ticket_instance.set_ticket_number(ticket_number) # Change self ticket_number
+            salesforce_ticket_instance.set_ticket_status(ticket_status) # Change self ticket_status
             salesforce_ticket_instance.get_ticket_acv(ticket_creation_date)
-            
-            table_data.append({
-                 'Case Number': ticket_number,
-                 'ACV': 
-            })
 
+    # Return table_data list as a table in the XSOAR's warroom
+    
 
 
 if __name__ in ('__main__', '__builtin__', 'builtins'):
