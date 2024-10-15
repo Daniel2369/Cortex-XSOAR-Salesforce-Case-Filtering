@@ -73,6 +73,8 @@ class salesforce_ticket(): # Define Salesforce ticket class with the attributes 
                     'Ticket Creation Date': self._ticket_created_date,
                     'Status': self._ticket_status
                 })
+
+                return table_data
             else:
                 return_error(f"No acv status has been returned for ticket: {self._ticket_number}")
      
@@ -97,10 +99,14 @@ def main():
         if ticket_number:
             salesforce_ticket_instance.set_ticket_number(ticket_number) # Change self ticket_number
             salesforce_ticket_instance.set_ticket_status(ticket_status) # Change self ticket_status
-            salesforce_ticket_instance.get_ticket_acv(ticket_creation_date)
+            table_data = salesforce_ticket_instance.get_ticket_acv(ticket_creation_date) # get acv + duplicates and populate a a list
 
     # Return table_data list as a table in the XSOAR's warroom
-    
+    demisto.results({
+        'Type': entryTypes['note'],
+        'ContentsFormat': formats['table'],
+        'Contents': table_data
+    })
 
 
 if __name__ in ('__main__', '__builtin__', 'builtins'):
