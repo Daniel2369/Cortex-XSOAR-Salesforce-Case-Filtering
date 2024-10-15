@@ -1,14 +1,14 @@
 class salesforce_ticket(): # Define Salesforce ticket class with the attributes we want to get
 
-        def __init__(self,ticket_number: int = None, acv_created_date: str = None, ticket_created_date: str = None
-                    , duplicate_count: int = None, acv: bool = False, ticket_status: str = None) -> None:
-            
-            self._ticket_number = ticket_number
-            self._acv_created_date = acv_created_date
-            self._ticket_created_date = ticket_created_date
-            self._duplicate_count = duplicate_count
-            self._acv = acv
-            self._ticket_status = ticket_status
+    def __init__(self,ticket_number: int = None, acv_created_date: str = None, ticket_created_date: str = None
+                , duplicate_count: int = None, acv: bool = False, ticket_status: str = None) -> None:
+        
+        self._ticket_number = ticket_number
+        self._acv_created_date = acv_created_date
+        self._ticket_created_date = ticket_created_date
+        self._duplicate_count = duplicate_count
+        self._acv = acv
+        self._ticket_status = ticket_status
 
     def get_owner_id(self, owner_full_name: str) -> str: # SQL query to get the owner_id
         get_owner_id = f"SELECT Id FROM User WHERE Name = '{owner_full_name}'"
@@ -29,7 +29,7 @@ class salesforce_ticket(): # Define Salesforce ticket class with the attributes 
         if isinstance(ticket_list_response, list) and ticket_list_response:
             if ticket_list_response[0]['Type'] != entryTypes['error']:
                 contents: list = ticket_list_response[0].get('Contents', [])
-                return_results(contents)
+                return contents
             else:
                 return_error("No ticket list has been returned")
 
@@ -39,7 +39,7 @@ class salesforce_ticket(): # Define Salesforce ticket class with the attributes 
     def set_ticket_status(self, ticket_status: int):
         return self._ticket_status == ticket_status
 
-    def get_ticket_acv(self,ticket_creation_date,ticket_status):
+    def get_ticket_acv(self,ticket_creation_date):
         acv_query = f"SELECT Case.CaseNumber, NewValue, CreatedDate FROM CaseHistory WHERE Case.CaseNumber = '{self._ticket_number}'"
         acv_query_response = demisto.executeCommand("salesforce-query", {"query": acv_query, "using": "SalesforcePy_XSOAR"})
 
@@ -49,9 +49,9 @@ class salesforce_ticket(): # Define Salesforce ticket class with the attributes 
 
                 awaiting_customer_verification_count = 0
                 created_dates = []
+                table_data: list = []
 
                 if isinstance(contents, list):
-                     table_data: list = []
                      for record in contents:
                           self._acv = record.get('NewValue')
                           self._acv_created_date = record.get('CreatedDate')
