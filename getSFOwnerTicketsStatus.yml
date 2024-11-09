@@ -1,0 +1,178 @@
+id: 96c683db-5b12-4eac-84ba-3ebfa3bb1df8
+version: 5
+vcShouldKeepItemLegacyProdMachine: false
+name: getSFOwnerTicketsStatus
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: 853d5abb-b27c-4620-8abd-b17a53e13fd4
+    type: start
+    task:
+      id: 853d5abb-b27c-4620-8abd-b17a53e13fd4
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+    nexttasks:
+      '#none#':
+      - "1"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "1":
+    id: "1"
+    taskid: 0ab466b3-9dac-48e8-8d0c-e5d6c465db82
+    type: regular
+    task:
+      id: 0ab466b3-9dac-48e8-8d0c-e5d6c465db82
+      version: -1
+      name: getSFOwnerTicketsStatus
+      scriptName: getSFOwnerTicketsStatus
+      type: regular
+      iscommand: false
+      brand: ""
+    nexttasks:
+      '#none#':
+      - "2"
+    scriptarguments:
+      email:
+        simple: some_mail@hello.com # Replace with your email
+      full_name:
+        simple: Daniel Berliant
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 195
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "2":
+    id: "2"
+    taskid: 938756fb-397b-47f3-8158-3fc426bd4cca
+    type: regular
+    task:
+      id: 938756fb-397b-47f3-8158-3fc426bd4cca
+      version: -1
+      name: Slack notification
+      scriptName: sendACVSlack
+      type: regular
+      iscommand: false
+      brand: ""
+    nexttasks:
+      '#none#':
+      - "3"
+    scriptarguments:
+      email:
+        simple: ${Email}
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 370
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "3":
+    id: "3"
+    taskid: a5e8855d-2624-476b-864a-46172883b5c4
+    type: regular
+    task:
+      id: a5e8855d-2624-476b-864a-46172883b5c4
+      version: -1
+      name: Close incident
+      description: commands.local.cmd.close.inv
+      script: Builtin|||closeInvestigation
+      type: regular
+      iscommand: true
+      brand: Builtin
+    nexttasks:
+      '#none#':
+      - "4"
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 545
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+  "4":
+    id: "4"
+    taskid: 1ffa2698-46a1-40c0-87f7-96982dce1e30
+    type: title
+    task:
+      id: 1ffa2698-46a1-40c0-87f7-96982dce1e30
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+    separatecontext: false
+    continueonerrortype: ""
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 720
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+    isoversize: false
+    isautoswitchedtoquietmode: false
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 735,
+        "width": 380,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+inputs: []
+outputs: []

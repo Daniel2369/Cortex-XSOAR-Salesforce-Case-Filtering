@@ -49,11 +49,8 @@ Before you begin, ensure that you have the following:
 4. Add Output
    * `Email`:
      * Type: String
-5. Create a Playbook
-   * First Task: Use the created automation and input the full name and the email of the owner.
-     * The output (Email) should appear automatically, as it was configured in the automation settings.
-   * Second Task: Select the Slack Automation and input ${Email} in the corresponding field.
-   * Final Task: Select the closeInvestigation automation to close the investigation.
+5. Upload getSFOwnerTicketsStatus.yml into the Playbooks tab in Cortex XSOAR.
+   * Edit playbooks first task insert your email.
 6. Create an Incident Type
    * Select the playbook you just created.
    * Check the box to enable Run Automatically.
