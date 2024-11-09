@@ -1,4 +1,4 @@
-# Salesforce Open Cases Extractor for Cortex XSOAR
+# Cortex-XSOAR-Salesforce-Case-Filtering
 ## Description
 
 This project integrates Salesforce with Cortex XSOAR using Demisto SDK to streamline case management. It extracts and processes open cases from Salesforce, identifies important case statuses, and displays the relevant data in a formatted table within the Cortex XSOAR environment. Additionally, it includes a Slack alerting feature to notify users of important case status updates.
