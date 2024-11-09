@@ -20,7 +20,7 @@ class Salesforcecase():
     def get_owner_id(self, owner_email: str) -> str:  # SQL query to get the owner_id
         get_owner_id = f"SELECT Id FROM User WHERE Email = '{owner_email}'" 
         try:
-            owner_id = demisto.executeCommand("salesforce-query", {"query": get_owner_id, "using": "SalesforcePy_XSOAR"})
+            owner_id = demisto.executeCommand("salesforce-query", {"query": get_owner_id})
             if owner_id and isinstance(owner_id, list):
                 contents: list = owner_id[0].get('Contents', [])
                 return contents[0]["Id"] if contents else None
@@ -32,7 +32,7 @@ class Salesforcecase():
     def get_owner_case_list(self, owner_id: str):
         case_list_query = f"SELECT CaseNumber, Status, CreatedDate FROM Case WHERE Status != 'Closed' AND OwnerId = '{owner_id}'"
         try:
-            case_list_response = demisto.executeCommand("salesforce-query", {"query": case_list_query, "using": "SalesforcePy_XSOAR"})
+            case_list_response = demisto.executeCommand("salesforce-query", {"query": case_list_query})
             if case_list_response and isinstance(case_list_response, list):
                 return case_list_response[0].get('Contents', [])
             else:
@@ -43,7 +43,7 @@ class Salesforcecase():
     def get_case_acv(self):
         acv_query = f"SELECT Case.CaseNumber, NewValue, CreatedDate FROM CaseHistory WHERE Case.CaseNumber = '{self._case_number}'"
         try:
-            acv_query_response = demisto.executeCommand("salesforce-query", {"query": acv_query, "using": "SalesforcePy_XSOAR"})
+            acv_query_response = demisto.executeCommand("salesforce-query", {"query": acv_query})
 
             if acv_query_response and isinstance(acv_query_response, list):
                 contents: list = acv_query_response[0].get('Contents', [])
