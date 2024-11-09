@@ -5,9 +5,13 @@ This project integrates Salesforce with Cortex XSOAR using Demisto SDK to stream
 
 ## Motivation
 
-This project was born from my experience as a Senior Technical Support Engineer within the Cortex XSOAR team. By leveraging my knowledge in the field, I created this tool to simplify my daily workflow, automate the extraction and parsing of Salesforce cases, and improve overall efficiency in case management. The Slack alerting feature was added to ensure that important case events are immediately communicated to the team.
+This project was born from my experience as a Senior Technical Support Engineer within the Cortex XSOAR team. Each day, I faced the time-consuming task of manually reviewing all of my Salesforce cases to understand the CaseHistory statuses, which could take anywhere from 15 to 30 minutes daily. This manual effort was inefficient and repetitive, so I set out to automate the process.
 
-Feel free to check out my [LinkedIn profile](https://www.linkedin.com/in/daniel-berliant-6725241a9/) for more about my background.
+Leveraging my knowledge of Python and the DemistoSDK, I built this tool to automate the extraction and parsing of Salesforce cases, streamlining my workflow. By integrating Palo Alto Networks' Cortex XSOAR as the automation platform, I was able to significantly reduce the time spent on these tasks, while also demonstrating my technical expertise.
+
+In addition, I added Slack alerting to ensure that critical case events are communicated to the team immediately. This solution not only saves me time, but it also benefits my team by providing better visibility into case status changes and improving our collective response times. Ultimately, this project has helped us deliver more efficient and responsive support to our customers, while also improving internal workflows and statistics for the entire team.
+
+Feel free to explore my [LinkedIn profile](https://www.linkedin.com/in/daniel-berliant-6725241a9/) to learn more about my professional background and experience.
 
 ## Features
 
