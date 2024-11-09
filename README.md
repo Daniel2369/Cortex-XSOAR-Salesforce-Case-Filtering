@@ -2,13 +2,13 @@
 ## Description
 
 This project integrates Salesforce with Cortex XSOAR using Demisto SDK to streamline case management. It extracts and processes open cases from Salesforce, identifies important case statuses, and displays the relevant data in a formatted table within the Cortex XSOAR environment. Additionally, it includes a Slack alerting feature to notify users of important case status updates.
----------------------------
+
 ## Motivation
 
 This project was born from my experience as a Senior Technical Support Engineer within the Cortex XSOAR team. By leveraging my knowledge in the field, I created this tool to simplify my daily workflow, automate the extraction and parsing of Salesforce cases, and improve overall efficiency in case management. The Slack alerting feature was added to ensure that important case events are immediately communicated to the team.
 
 Feel free to check out my [LinkedIn profile](https://www.linkedin.com/in/daniel-berliant-6725241a9/) for more about my background.
----------------------------
+
 ## Features
 
 1. Integration with **Demisto SDK**: The project works with Demisto SDK to interact with the **Cortex XSOAR platform**, allowing seamless automation of tasks.
@@ -43,15 +43,11 @@ Before you begin, ensure that you have the following:
 2. Set Up the Automation
    * Delete any existing content inside the automation and paste the new automation script.
 3. Add Arguments in the Settings
-   * full_name:
-     * Type: Checkbox
-     * Mandatory: Yes
-     * Description: Insert the case owner’s full name.
-   * email:
+   * `email`:
      * Type: String
      * Description: Pass this argument if you want to receive Slack notifications.
 4. Add Output
-   * Email:
+   * `Email`:
      * Type: String
 5. Create a Playbook
    * First Task: Use the created automation and input the full name and the email of the owner.
