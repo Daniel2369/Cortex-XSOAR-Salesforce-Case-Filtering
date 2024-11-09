@@ -2,7 +2,7 @@
 name = "salesforce"
 version = "0.1.0"
 description = "XSOAR 8 project to get EMEA team ticket details"
-authors = ["Daniel Berliant <dberliant@paloaltonetworks.com>"]
+authors = ["Daniel Berliant"]
 readme = "README.md"
 package-mode = false
 
