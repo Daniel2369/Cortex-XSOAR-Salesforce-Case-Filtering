@@ -17,70 +17,63 @@ class Salesforcecase():
     def set_case_createdDate(self, case_created_date: str):
         self._case_created_date = case_created_date
 
-    def get_owner_id(self, owner_email: str) -> str:  # SQL query to get the owner_id
-        get_owner_id = f"SELECT Id FROM User WHERE Email = '{owner_email}'" 
-        try:
-            owner_id = demisto.executeCommand("salesforce-query", {"query": get_owner_id})
-            if owner_id and isinstance(owner_id, list):
-                contents: list = owner_id[0].get('Contents', [])
-                return contents[0]["Id"] if contents else None
-            else:
-                return_error("No 'Id' found in the query results")
-        except Exception as e:
-            return str(e)
+    def get_owner_id(self, owner_email: str):
+        get_owner_id = f"SELECT Id FROM User WHERE email = '{owner_email}'" 
+        owner_id_response = demisto.executeCommand("salesforce-query", {"query": get_owner_id, "using": "SalesforcePy_XSOAR"}) # Use your own integration instance
+        if isinstance(owner_id_response, list) and owner_id_response:
+            contents: list = owner_id_response[0].get('Contents', [])
+            owner_id = contents[0]["Id"] if contents else None
+            return owner_id
+        else:
+            return_error("No 'Id' found in the query results")
 
     def get_owner_case_list(self, owner_id: str):
         case_list_query = f"SELECT CaseNumber, Status, CreatedDate FROM Case WHERE Status != 'Closed' AND OwnerId = '{owner_id}'"
-        try:
-            case_list_response = demisto.executeCommand("salesforce-query", {"query": case_list_query})
-            if case_list_response and isinstance(case_list_response, list):
-                return case_list_response[0].get('Contents', [])
-            else:
-                return_error("No case list has been returned")
-        except Exception as e:
-            return str(e)
+        case_list_response = demisto.executeCommand("salesforce-query", {"query": case_list_query, "using": "SalesforcePy_XSOAR"}) # Use your own integration instance
+        if isinstance(case_list_response, list) and case_list_response:
+            contents = case_list_response[0].get('Contents', [])
+            return contents
+        else:
+            return_error("No case list has been returned")
 
     def get_case_acv(self):
         acv_query = f"SELECT Case.CaseNumber, NewValue, CreatedDate FROM CaseHistory WHERE Case.CaseNumber = '{self._case_number}'"
-        try:
-            acv_query_response = demisto.executeCommand("salesforce-query", {"query": acv_query})
+        acv_query_response = demisto.executeCommand("salesforce-query", {"query": acv_query, "using": "SalesforcePy_XSOAR"}) # Use your own integration instance
 
-            if acv_query_response and isinstance(acv_query_response, list):
-                contents: list = acv_query_response[0].get('Contents', [])
+        if acv_query_response and isinstance(acv_query_response, list):
+            contents: list = acv_query_response[0].get('Contents', [])
 
-                if contents:  # Check if contents is not empty
-                    table_data: list = []
-                    # For duplicate check
-                    awaiting_customer_verification_count = 0
-                    acv_created_dates = []
+            if contents:  # Check if contents is not empty
+                table_data: list = []
+                # For duplicate check
+                awaiting_customer_verification_count = 0
+                acv_created_dates = []
 
-                    for record in contents: # Looking for attributes key in the history to find the ACV records
-                        self._acv = record.get('NewValue')
-                        self._acv_created_date = record.get('CreatedDate')
+                for record in contents: # Looking for attributes key in the history to find the ACV records
+                    self._acv = record.get('NewValue')
+                    self._acv_created_date = record.get('CreatedDate')
 
-                        if self._acv == 'Awaiting Customer Verification':
-                            awaiting_customer_verification_count += 1 # If more then 1 record of acv it will be > 1
-                            acv_created_dates.append(self._acv_created_date) # Saves the dates of the ACV record
+                    if self._acv == 'Awaiting Customer Verification':
+                        awaiting_customer_verification_count += 1 # If more then 1 record of acv it will be > 1
+                        acv_created_dates.append(self._acv_created_date) # Saves the dates of the ACV record
 
-                    self._acv = 'True' if awaiting_customer_verification_count > 0 else 'False'
-                    self._acv_created_date = ', '.join(acv_created_dates) if acv_created_dates else 'None'
-                    self._duplicate_count = awaiting_customer_verification_count if awaiting_customer_verification_count > 1 else 'None'
-                    self._case_created_date = self._case_created_date if self._acv == 'False' else 'None'
+                self._acv = 'True' if awaiting_customer_verification_count > 0 else 'False'
+                self._acv_created_date = ', '.join(acv_created_dates) if acv_created_dates else 'None'
+                self._duplicate_count = awaiting_customer_verification_count if awaiting_customer_verification_count > 1 else 'None'
+                self._case_created_date = self._case_created_date if self._acv == 'False' else 'None'
 
-                    # Append to table data only if _case_number is set
-                    table_data.append({
-                        'Case Number': self._case_number,
-                        'ACV': self._acv,
-                        'ACV Created Date/s': self._acv_created_date,
-                        'Duplicate Count': self._duplicate_count,
-                        'case Creation Date': self._case_created_date,
-                        'Status': self._case_status
-                    })
-                return table_data
-            else:
-                return_error(f"No ACV status has been returned for case: {self._case_number}")
-        except Exception as e:
-            return str(e)
+                # Append to table data only if _case_number is set
+                table_data.append({
+                    'Case Number': self._case_number,
+                    'ACV': self._acv,
+                    'ACV Created Date/s': self._acv_created_date,
+                    'Duplicate Count': self._duplicate_count,
+                    'case Creation Date': self._case_created_date,
+                    'Status': self._case_status
+                })
+            return table_data
+        else:
+            return_error(f"No ACV status has been returned for case: {self._case_number}")
 
 def main():
     email = demisto.args().get('email')
